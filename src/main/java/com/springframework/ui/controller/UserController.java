@@ -28,7 +28,6 @@ public class UserController {
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userDetailsRequestModel, userDto);
 
-
         UserDto createdUser = userService.createUser(userDto);
 
         UserRest returnValue = new UserRest();
