@@ -22,24 +22,24 @@ public class UserEntity implements Serializable {
 
     // require field, don't save in db if doesn't have userId
     // alphanumeric - sending back to mobile application with response.verify
-    @Column(nullable = false)
+    @Column(nullable = false)                   // cannot be null
     private String userId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50)      // cannot be null & limit length
     private String firstName;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50)      // cannot be null & limit length
     private String lastName;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100)     // cannot be null & limit length & unique
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false)                   // cannot be null & limit length
     private String encryptedPassword;
     private String emailVerificationToken;
 
     // set default value to false
-    @Column(nullable = false)
+    @Column(nullable = false)                   // cannot be null & limit length
     private Boolean emailVerificationStatus =  false;
 
 
