@@ -1,6 +1,7 @@
 package com.springframework.service.impl;
 
 import com.springframework.UserRepository;
+import com.springframework.Utils;
 import com.springframework.dto.UserDto;
 import com.springframework.entity.UserEntity;
 import com.springframework.service.UserService;
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    Utils utils;
+
     @Override
     public UserDto createUser(UserDto userDto) {
 
@@ -24,8 +28,10 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
 
+
+        String publicUserId = utils.generateUserId(30);
+        userEntity.setUserId(publicUserId);
         userEntity.setEncryptedPassword("test");
-        userEntity.setUserId("testUserId");
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
 

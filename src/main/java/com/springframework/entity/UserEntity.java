@@ -23,7 +23,7 @@ public class UserEntity implements Serializable {
     // require field, don't save in db if doesn't have userId
     // alphanumeric - sending back to mobile application with response.verify
     @Column(nullable = false)                   // cannot be null
-    private String userId;
+    private String  userId;
 
     @Column(nullable = false, length = 50)      // cannot be null & limit length
     private String firstName;
