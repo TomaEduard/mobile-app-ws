@@ -7,10 +7,13 @@ import com.springframework.entity.UserEntity;
 import com.springframework.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -47,8 +50,12 @@ public class UserServiceImpl implements UserService {
         return returnValue;
     }
 
+    // #1 of 3 verify in db if exist username(email)
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if(userEntity == null) throw new UsernameNotFoundException(email);
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
     }
 }
