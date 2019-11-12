@@ -18,7 +18,6 @@ public class UserController {
 
     @GetMapping
     public String getUser() {
-
         return "get user was callerd";
     }
 
