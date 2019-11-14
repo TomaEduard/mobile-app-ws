@@ -2,15 +2,18 @@ package com.springframework.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Setter
 @Getter
+@ToString
 @Entity(name = "users")
 public class UserEntity implements Serializable {
 
+//    @ToString.Exclude
     private static final long serialVersionUID = 6835192601898364280L;
 
     @Id
