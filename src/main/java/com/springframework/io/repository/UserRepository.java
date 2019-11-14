@@ -1,7 +1,7 @@
-package com.springframework;
+package com.springframework.io.repository;
 
 
-import com.springframework.entity.UserEntity;
+import com.springframework.io.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

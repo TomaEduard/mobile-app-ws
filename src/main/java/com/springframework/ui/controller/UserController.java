@@ -1,7 +1,6 @@
 package com.springframework.ui.controller;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import com.springframework.dto.UserDto;
+import com.springframework.shared.dto.UserDto;
 import com.springframework.service.UserService;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.UserRest;

@@ -1,4 +1,4 @@
-package com.springframework.entity;
+package com.springframework.io.entity;
 
 import lombok.Getter;
 import lombok.Setter;

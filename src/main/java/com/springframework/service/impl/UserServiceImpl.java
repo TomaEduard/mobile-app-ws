@@ -1,9 +1,9 @@
 package com.springframework.service.impl;
 
-import com.springframework.UserRepository;
-import com.springframework.Utils;
-import com.springframework.dto.UserDto;
-import com.springframework.entity.UserEntity;
+import com.springframework.io.repository.UserRepository;
+import com.springframework.shared.Utils;
+import com.springframework.shared.dto.UserDto;
+import com.springframework.io.entity.UserEntity;
 import com.springframework.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +30,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
 
-        UserEntity storeUserDetails = userRepository.findByEmail(userDto.getEmail());
-
+        // check if the email already exist in db
         if(userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record is already exists!");
 
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
 
-
+        // set userId and generated random sting
         String publicUserId = utils.generateUserId(30);
         userEntity.setUserId(publicUserId);
+
+        // set encryptedPasswod and generated encryptedPassword
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode((userDto.getPassword())));
 
         UserEntity storedUserDetails = userRepository.save(userEntity);

@@ -1,4 +1,4 @@
-package com.springframework.dto;
+package com.springframework.shared.dto;
 
 import lombok.Getter;
 import lombok.Setter;

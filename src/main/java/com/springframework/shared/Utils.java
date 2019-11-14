@@ -1,4 +1,4 @@
-package com.springframework;
+package com.springframework.shared;
 
 import org.springframework.stereotype.Component;
 
@@ -19,6 +19,7 @@ public class Utils {
 
         for (int i = 0; i < length; i++) {
             String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwzyz";
+            // randomly pickup a character of ALPHABET String length number of time
             returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
         }
 
