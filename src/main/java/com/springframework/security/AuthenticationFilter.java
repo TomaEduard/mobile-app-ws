@@ -3,6 +3,9 @@ package com.springframework.security;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springframework.SpringApplicationContext;
+import com.springframework.service.UserService;
+import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.request.UserLoginRequestModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -29,11 +32,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         this.authenticationManager = authenticationManager;
     }
 
-    // if #1 success #2 of 3 request need contain username and password and we check them out with record what we have in db
+    // #1 of 3 we save request into a local variable to verify that data in the request coincides with the data of db
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
+            System.out.println("#1 - AuthenticationFilter - attemptAuthentication");
+
+            // save request payload body fields into an object with have these fields
             UserLoginRequestModel cred = new ObjectMapper().readValue(request.getInputStream(), UserLoginRequestModel.class);
 
             return authenticationManager.authenticate(
@@ -48,23 +54,31 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    // if #2 succesfull trigger #3, generate token and pass it to the header response
+    // #3. If #1 & #2 succesfull trigger #3, generate token and pass it to the header response
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 
+        System.out.println("#3 - AuthenticationFilter - successfulAuthentication");
         String userName = ((User) authResult.getPrincipal()).getUsername();
 
+        // create JWT with jjwt dependency
         String token = Jwts.builder()
                 .setSubject(userName)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SecurityConstants.TOKEN_SECRET)
                 .compact();
 
-        // token is include in header
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
+
+        // token is added in header
         response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+        // added variable name UserId with value of this from db
+        response.addHeader("UserID", userDto.getUserId());
     }
+
 }
 
