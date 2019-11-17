@@ -29,7 +29,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .permitAll()
 
                 // protect api
-                .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
+//                .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
+                .anyRequest().authenticated().and().addFilter(getAuthenticationFilter());
     }
 
     @Override
@@ -37,5 +38,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    public AuthenticationFilter getAuthenticationFilter() throws Exception {
+        final AuthenticationFilter filter = new AuthenticationFilter(authenticationManager());
+        filter.setFilterProcessesUrl("/users/login");
+        return filter;
+    }
 
 }
