@@ -54,7 +54,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    // #3. If #1 & #2 succesfull trigger #3, generate token and pass it to the header response
+    // #3. If #1 & #2 successfully trigger #3, generate token and pass it to the header response
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
@@ -68,7 +68,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String token = Jwts.builder()
                 .setSubject(userName)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS256, SecurityConstants.TOKEN_SECRET)
+                .signWith(SignatureAlgorithm.HS256, SecurityConstants.getTokenSecret())
                 .compact();
 
         UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
