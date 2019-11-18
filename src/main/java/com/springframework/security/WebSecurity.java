@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 //import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,14 +24,25 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     //    Because AuthenticationFilter isn't a @Bean, can't been @Autowired into WebSecurity but we can create a new instance of it.
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests()
-                // public api
-                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
-                .permitAll()
+        http
+            .csrf().disable().authorizeRequests()
+            // public api for register
+            .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+            .permitAll()
 
-                // protect api
-//                .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
-                .anyRequest().authenticated().and().addFilter(getAuthenticationFilter());
+            // protect api
+//          .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
+             .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
+
+             // validated token login
+             .addFilter(new AuthorizationFilter(authenticationManager()))
+
+             // prevent cached session and reauthorizing all request receive
+             // we want all rest api(not login) contain header (Auth.. Bearer token) and reAuthorize
+             .sessionManagement()
+             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+        ;
     }
 
     @Override

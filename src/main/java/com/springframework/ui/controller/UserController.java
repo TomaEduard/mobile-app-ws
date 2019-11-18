@@ -17,7 +17,7 @@ public class UserController {
 
     @GetMapping
     public String getUser() {
-        return "get user was callerd";
+        return "get user was called";
     }
 
     @PostMapping
