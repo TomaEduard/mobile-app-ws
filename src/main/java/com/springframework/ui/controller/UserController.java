@@ -1,7 +1,7 @@
 package com.springframework.ui.controller;
 
-import com.springframework.shared.dto.UserDto;
 import com.springframework.service.UserService;
+import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.UserRest;
 import org.springframework.beans.BeanUtils;
@@ -15,9 +15,15 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping
-    public String getUser() {
-        return "get user was called";
+    @GetMapping(path = "/{userId}")
+    public UserRest getUser(@PathVariable String userId) {
+
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        UserRest userRest = new UserRest();
+        BeanUtils.copyProperties(userDto, userRest);
+
+        return userRest;
     }
 
     @PostMapping

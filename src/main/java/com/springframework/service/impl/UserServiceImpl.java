@@ -1,10 +1,10 @@
 package com.springframework.service.impl;
 
+import com.springframework.io.entity.UserEntity;
 import com.springframework.io.repository.UserRepository;
+import com.springframework.service.UserService;
 import com.springframework.shared.Utils;
 import com.springframework.shared.dto.UserDto;
-import com.springframework.io.entity.UserEntity;
-import com.springframework.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
 
         // check if the email already exist in db
-        if(userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record is already exists!");
+        if (userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record is already exists!");
 
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(userDto, userEntity);
@@ -56,7 +56,20 @@ public class UserServiceImpl implements UserService {
 
         UserEntity userEntity = userRepository.findByEmail(email);
 
-        if(userEntity == null) throw new UsernameNotFoundException(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity, userDto);
+
+        return userDto;
+    }
+
+    @Override
+    public UserDto getUserByUserId(String userId) {
+
+        UserEntity userEntity = userRepository.findByUserId(userId);
+
+        if (userEntity == null) throw new UsernameNotFoundException(userId);
 
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userEntity, userDto);
@@ -71,7 +84,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("#2 - UserServiceImpl - loadUserByUsername");
         UserEntity userEntity = userRepository.findByEmail(email);
 
-        if(userEntity == null) throw new UsernameNotFoundException(email);
+        if (userEntity == null) throw new UsernameNotFoundException(email);
         return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
     }
 
