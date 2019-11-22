@@ -1,10 +1,13 @@
 package com.springframework.service.impl;
 
+import com.springframework.exceptions.UserServiceException;
 import com.springframework.io.entity.UserEntity;
 import com.springframework.io.repository.UserRepository;
 import com.springframework.service.UserService;
 import com.springframework.shared.Utils;
 import com.springframework.shared.dto.UserDto;
+import com.springframework.ui.transfer.response.ErrorMessage;
+import com.springframework.ui.transfer.response.ErrorMessages;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -68,13 +71,31 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByUserId(String userId) {
 
         UserEntity userEntity = userRepository.findByUserId(userId);
-
         if (userEntity == null) throw new UsernameNotFoundException(userId);
 
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(userEntity, userDto);
 
         return userDto;
+    }
+
+    @Override
+    public UserDto updateUser(String userId, UserDto userDto) {
+
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        if (userEntity == null) {
+            throw new UserServiceException(ErrorMessages.NO_RECORD_FOUND.getErrorMessage());
+        }
+
+        userEntity.setFirstName(userDto.getFirstName());
+        userEntity.setLastName(userDto.getLastName());
+
+        UserEntity updatedUserDetails = userRepository.save(userEntity);
+
+        UserDto returnValue = new UserDto();
+        BeanUtils.copyProperties(updatedUserDetails, returnValue);
+
+        return returnValue;
     }
 
     // #2 of 3 find the username(email) in the database

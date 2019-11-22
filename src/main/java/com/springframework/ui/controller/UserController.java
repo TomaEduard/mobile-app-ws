@@ -6,6 +6,7 @@ import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,7 +27,8 @@ public class UserController {
         return userRest;
     }
 
-    @PostMapping
+    @PostMapping(consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
+                 produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
 
         UserDto userDto = new UserDto();
@@ -40,10 +42,20 @@ public class UserController {
         return returnValue;
     }
 
-    @PutMapping
-    public String updateUser() {
+    @PutMapping(path = "/{userId}",
+                consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
+                produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public UserRest updateUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel, @PathVariable String userId) {
 
-        return "update user was called";
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userDetailsRequestModel, userDto);
+
+        UserDto updateUser = userService.updateUser(userId, userDto);
+
+        UserRest returnValue = new UserRest();
+        BeanUtils.copyProperties(updateUser, returnValue);
+
+        return returnValue;
     }
 
     @DeleteMapping
