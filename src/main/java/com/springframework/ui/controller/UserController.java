@@ -3,6 +3,9 @@ package com.springframework.ui.controller;
 import com.springframework.service.UserService;
 import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
+import com.springframework.ui.transfer.response.OperationStatusModel;
+import com.springframework.ui.transfer.response.RequestOperationName;
+import com.springframework.ui.transfer.response.RequestOperationStatus;
 import com.springframework.ui.transfer.response.UserRest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +61,18 @@ public class UserController {
         return returnValue;
     }
 
-    @DeleteMapping
-    public String deleteUser() {
+    @DeleteMapping(path = "/{userId}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public OperationStatusModel deleteUser(@PathVariable String userId) {
 
-        return "delete user was called";
+        OperationStatusModel operationStatusModel = new OperationStatusModel();
+
+        userService.deleteUser(userId);
+
+        operationStatusModel.setOperationName(RequestOperationName.DELETE.name());
+        operationStatusModel.setOperationResult(RequestOperationStatus.SUCCESS.name());
+
+        return operationStatusModel;
     }
 
 }
