@@ -12,23 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("users") // http://localhost:8080/users
 public class UserController {
 
     @Autowired
     UserService userService;
-
-    @GetMapping(path = "/{userId}")
-    public UserRest getUser(@PathVariable String userId) {
-
-        UserDto userDto = userService.getUserByUserId(userId);
-
-        UserRest userRest = new UserRest();
-        BeanUtils.copyProperties(userDto, userRest);
-
-        return userRest;
-    }
 
     @PostMapping(consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
                  produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -43,6 +35,17 @@ public class UserController {
         BeanUtils.copyProperties(createdUser, returnValue);
 
         return returnValue;
+    }
+
+    @GetMapping(path = "/{userId}")
+    public UserRest getUser(@PathVariable String userId) {
+
+        UserDto userDto = userService.getUserByUserId(userId);
+
+        UserRest userRest = new UserRest();
+        BeanUtils.copyProperties(userDto, userRest);
+
+        return userRest;
     }
 
     @PutMapping(path = "/{userId}",
@@ -75,4 +78,21 @@ public class UserController {
         return operationStatusModel;
     }
 
+    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "20") int limit) {
+
+        List<UserRest> returnValue = new ArrayList<>();
+
+        List<UserDto> users = userService.getUsers(page, limit);
+
+        // for every users retrieve create, copy properties to a userRest and add this to an ArrayList
+        for (UserDto userDto : users) {
+            UserRest userRest = new UserRest();
+            BeanUtils.copyProperties(userDto, userRest);
+            returnValue.add(userRest);
+        }
+
+        return returnValue;
+    }
 }
