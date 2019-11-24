@@ -7,6 +7,7 @@ import com.springframework.ui.transfer.response.OperationStatusModel;
 import com.springframework.ui.transfer.response.RequestOperationName;
 import com.springframework.ui.transfer.response.RequestOperationStatus;
 import com.springframework.ui.transfer.response.UserRest;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -26,8 +27,10 @@ public class UserController {
                  produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
 
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userDetailsRequestModel, userDto);
+//        UserDto userDto = new UserDto();
+//        BeanUtils.copyProperties(userDetailsRequestModel, userDto);
+        ModelMapper modelMapper = new ModelMapper();
+        UserDto userDto = modelMapper.map(userDetailsRequestModel, UserDto.class);
 
         UserDto createdUser = userService.createUser(userDto);
 

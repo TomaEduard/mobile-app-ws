@@ -1,9 +1,11 @@
 package com.springframework.shared.dto;
 
+import com.springframework.ui.transfer.request.AddressRequestModel;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +23,5 @@ public class UserDto implements Serializable {
     private Boolean emailVerificationStatus = false;
     private String user;
 
+    private List<AddressDTO> addresses;
 }
