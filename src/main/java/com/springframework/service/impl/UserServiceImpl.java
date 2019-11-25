@@ -5,8 +5,10 @@ import com.springframework.io.entity.UserEntity;
 import com.springframework.io.repository.UserRepository;
 import com.springframework.service.UserService;
 import com.springframework.shared.Utils;
+import com.springframework.shared.dto.AddressDTO;
 import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.response.ErrorMessages;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,8 +40,18 @@ public class UserServiceImpl implements UserService {
         // check if the email already exist in db
         if (userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record is already exists!");
 
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(userDto, userEntity);
+        for (int i = 0; i< userDto.getAddresses().size(); i++){
+            AddressDTO address = userDto.getAddresses().get(i);
+            address.setUserDetails(userDto);
+            address.setAddressId(utils.generateAddressId(30));
+
+            userDto.getAddresses().set(i, address);
+        }
+
+//        UserEntity userEntity = new UserEntity();
+//        BeanUtils.copyProperties(userDto, userEntity);
+            ModelMapper modelMapper = new ModelMapper();
+        UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
 
         // set userId and generated random sting
         String publicUserId = utils.generateUserId(30);
@@ -50,8 +62,9 @@ public class UserServiceImpl implements UserService {
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
 
-        UserDto returnValue = new UserDto();
-        BeanUtils.copyProperties(storedUserDetails, returnValue);
+//        UserDto returnValue = new UserDto();
+//        BeanUtils.copyProperties(storedUserDetails, returnValue);
+        UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 
         return returnValue;
     }

@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Setter
 @Getter
@@ -43,4 +44,6 @@ public class UserEntity implements Serializable {
     @Column(nullable = false)                   // cannot be null & limit length
     private Boolean emailVerificationStatus =  false;
 
+    @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
+    private List<AddressEntity> addresses;
 }
