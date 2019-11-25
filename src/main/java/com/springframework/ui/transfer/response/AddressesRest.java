@@ -1,11 +1,12 @@
-package com.springframework.ui.transfer.request;
+package com.springframework.ui.transfer.response;
 
+import com.springframework.shared.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class AddressRequestModel {
+public class AddressesRest {
 
     private String addressId;
     private String city;
