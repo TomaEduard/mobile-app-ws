@@ -4,6 +4,7 @@ import com.springframework.io.entity.AddressEntity;
 import com.springframework.io.entity.UserEntity;
 import com.springframework.io.repository.AddressRepository;
 import com.springframework.io.repository.UserRepository;
+import com.springframework.service.AddressService;
 import com.springframework.shared.dto.AddressDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AddressService implements com.springframework.service.AddressService {
+public class AddressServiceImpl implements AddressService {
 
     @Autowired
     UserRepository userRepository;
@@ -36,15 +37,6 @@ public class AddressService implements com.springframework.service.AddressServic
         }
 
         return returnValue;
-    }
-
-    public void getAddressesByUserid(String userId) {
-
-//        List<AddressEntity> allAddressesByuserId = addressRepository.findAllByUserDetails(userId);
-
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        System.out.println(userEntity.getAddresses().get(2));
-//        Iterable<AddressEntity> addresses = addressRepository.findAllByUserDetails(userEntity);
     }
 
     @Override
