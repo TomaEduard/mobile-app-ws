@@ -1,18 +1,22 @@
 package com.springframework.ui.controller;
 
+import com.springframework.io.repository.UserRepository;
+import com.springframework.service.AddressService;
 import com.springframework.service.UserService;
+import com.springframework.shared.dto.AddressDTO;
 import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
-import com.springframework.ui.transfer.response.OperationStatusModel;
-import com.springframework.ui.transfer.response.RequestOperationName;
-import com.springframework.ui.transfer.response.RequestOperationStatus;
-import com.springframework.ui.transfer.response.UserRest;
+import com.springframework.ui.transfer.response.*;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +26,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    AddressService addressService;
 
     @PostMapping(consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE },
                  produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -34,7 +41,6 @@ public class UserController {
 
         UserDto createdUser = userService.createUser(userDto);
 
-//        UserRest returnValue = new UserRest();
 //        BeanUtils.copyProperties(createdUser, returnValue);
         UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
 
@@ -46,10 +52,9 @@ public class UserController {
 
         UserDto userDto = userService.getUserByUserId(userId);
 
-        UserRest userRest = new UserRest();
-        BeanUtils.copyProperties(userDto, userRest);
+        UserRest returnValue = new ModelMapper().map(userDto, (Type) UserRest.class);
 
-        return userRest;
+        return returnValue;
     }
 
     @PutMapping(path = "/{userId}",
@@ -98,5 +103,33 @@ public class UserController {
         }
 
         return returnValue;
+    }
+
+    // http://localholst:8081/mobile-app-ws/users/{userId}/addresses
+    @GetMapping(path = "/{userId}/addresses",
+                produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public List<AddressesRest> getUserAddresses(@PathVariable String userId) {
+
+        List<AddressDTO> addressDTO = addressService.getAddresses(userId);
+
+        List<AddressesRest> addressesRestList = new ArrayList<>();
+
+        if (addressDTO != null && !addressDTO.isEmpty()) {
+            java.lang.reflect.Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
+            addressesRestList = new ModelMapper().map(addressDTO, listType);
+        }
+
+        return addressesRestList;
+    }
+
+    // http://localholst:8081/mobile-app-ws/users/{userId}/addresses/{addressId}
+    @GetMapping(path = "/{userId}/addresses/{addressId}",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public AddressesRest getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
+
+        AddressDTO addressDTO = addressService.getAddress(addressId);
+
+        return  new ModelMapper().map(addressDTO, AddressesRest.class);
+
     }
 }

@@ -1,6 +1,5 @@
 package com.springframework.ui.transfer.response;
 
-import com.springframework.shared.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
         // check if the email already exist in db
         if (userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record is already exists!");
 
+        // generateAddressId for every address
         for (int i = 0; i< userDto.getAddresses().size(); i++){
             AddressDTO address = userDto.getAddresses().get(i);
             address.setUserDetails(userDto);
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
         String publicUserId = utils.generateUserId(30);
         userEntity.setUserId(publicUserId);
 
-        // set encryptedPasswod and generated encryptedPassword
+        // set encryptedPassword and generated encryptedPassword
         userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode((userDto.getPassword())));
 
         UserEntity storedUserDetails = userRepository.save(userEntity);
