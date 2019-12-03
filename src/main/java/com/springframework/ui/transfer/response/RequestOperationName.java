@@ -2,5 +2,8 @@ package com.springframework.ui.transfer.response;
 
 public enum RequestOperationName {
 
-    DELETE
+    DELETE,
+    VERIFY_EMAIL,
+    REQUEST_PASSWORD_RESET,
+    PASSWORD_RESET
 }

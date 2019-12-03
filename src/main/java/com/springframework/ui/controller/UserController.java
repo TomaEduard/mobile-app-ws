@@ -121,6 +121,7 @@ public class UserController {
             Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
             addressesRestList = new ModelMapper().map(addressDTO, listType);
 
+            // added 2 links for every address 
             for (AddressesRest addressRest : addressesRestList) {
                 Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId())).withSelfRel();
                 addressRest.add(addressLink);
@@ -155,6 +156,25 @@ public class UserController {
         returnValue.add(addressesLink);
 
         return new Resource<>(returnValue);
+    }
 
+    // http://localholst:8081/mobile-app-ws/users/email-verification?token=sdfsdf
+    @GetMapping(path = "email-verification",
+            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
+
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
+
+        boolean isVerified = userService.verifyEmailToken(token);
+
+        if(isVerified)
+        {
+            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        } else {
+            returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return returnValue;
     }
 }

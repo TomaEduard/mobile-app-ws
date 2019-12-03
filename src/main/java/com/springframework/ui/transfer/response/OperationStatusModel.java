@@ -11,5 +11,4 @@ public class OperationStatusModel {
 
     private String operationName;
 
-
 }
