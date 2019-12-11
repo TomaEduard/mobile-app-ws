@@ -40,6 +40,6 @@ public class AddressEntity implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id") // userId
-    private UserEntity userDetails;
+    private UserEntity userEntity;
 
 }

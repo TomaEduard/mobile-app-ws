@@ -41,13 +41,15 @@ public class Utils {
         try {
 
             Claims claims = Jwts.parser()
-                    // use the same encrypted key
+                    // use getTokenSecret() method from SecurityConstants to get the tokenSecret from application.propetie
                     .setSigningKey(SecurityConstants.getTokenSecret())
+                    // decrypt token and save to local variable named claims
                     .parseClaimsJws(token).getBody();
 
             Date tokenExpirationDate = claims.getExpiration();
             Date todayDate = new Date();
 
+            // if return true the date is not expired
             returnValue = tokenExpirationDate.before(todayDate);
         } catch (ExpiredJwtException ex) {
             returnValue = true;

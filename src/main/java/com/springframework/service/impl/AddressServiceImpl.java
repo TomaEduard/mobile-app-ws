@@ -31,7 +31,8 @@ public class AddressServiceImpl implements AddressService {
         UserEntity userEntity = userRepository.findByUserId(userId);
         if (userEntity == null) return returnValue;
 
-        Iterable<AddressEntity> addresses = addressRepository.findAllByUserDetails(userEntity);
+        Iterable<AddressEntity> addresses = addressRepository.findAllByUserEntity(userEntity);
+
         for (AddressEntity addressEntity : addresses) {
             returnValue.add(modelMapper.map(addressEntity, AddressDTO.class));
         }

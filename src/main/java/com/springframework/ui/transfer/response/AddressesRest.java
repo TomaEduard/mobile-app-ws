@@ -15,4 +15,5 @@ public class AddressesRest extends ResourceSupport {
     private String postalCode;
     private String type;
 //    private String userDetails;
+
 }
