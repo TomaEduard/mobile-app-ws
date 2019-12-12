@@ -35,6 +35,34 @@ public class UserServiceImpl implements UserService {
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    // #2 of 3 find the username(email) in the database
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        System.out.println("#2 - UserServiceImpl - loadUserByUsername");
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(),
+                true, true, true, new ArrayList<>());
+
+//        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
+    }
+
+    @Override
+    public UserDto getUser(String email) {
+
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if (userEntity == null) throw new UsernameNotFoundException(email);
+
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(userEntity, userDto);
+
+        return userDto;
+    }
+
     @Override
     public UserDto createUser(UserDto userDto) {
 
@@ -70,19 +98,6 @@ public class UserServiceImpl implements UserService {
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
 
         return returnValue;
-    }
-
-    @Override
-    public UserDto getUser(String email) {
-
-        UserEntity userEntity = userRepository.findByEmail(email);
-
-        if (userEntity == null) throw new UsernameNotFoundException(email);
-
-        UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(userEntity, userDto);
-
-        return userDto;
     }
 
     @Override
@@ -156,35 +171,31 @@ public class UserServiceImpl implements UserService {
         // find user by token
         UserEntity userEntity = userRepository.findUserByEmailVerificationToken(token);
 
-        if (userEntity != null) {
-            // verify token expire date
-            boolean hastokenExpired = Utils.hasTokenExpired(token);
+        // verify token expired date
+        boolean hastokenExpired = Utils.hasTokenExpired(token);
 
-            if (!hastokenExpired) {
-                userEntity.setEmailVerificationToken(null);
-                userEntity.setEmailVerificationStatus(Boolean.TRUE);
-                userRepository.save(userEntity);
-                returnValue = true;
-            }
+        if (!hastokenExpired) {
+            userEntity.setEmailVerificationToken(null);
+            userEntity.setEmailVerificationStatus(Boolean.TRUE);
+            userRepository.save(userEntity);
+            returnValue = true;
         }
 
         return returnValue;
     }
 
-    // #2 of 3 find the username(email) in the database
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        System.out.println("#2 - UserServiceImpl - loadUserByUsername");
-        UserEntity userEntity = userRepository.findByEmail(email);
-
-        if (userEntity == null) throw new UsernameNotFoundException(email);
-
-        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), userEntity.getEmailVerificationStatus(),
-        true, true, true, new ArrayList<>());
-
-//        return new User(userEntity.getEmail(), userEntity.getEncryptedPassword(), new ArrayList<>());
-    }
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

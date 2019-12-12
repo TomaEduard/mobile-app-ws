@@ -25,6 +25,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users") // http://localhost:8081/users
+@CrossOrigin(origins= "http://localhost:8088")
 public class UserController {
 
     @Autowired
@@ -159,22 +160,37 @@ public class UserController {
     }
 
     // http://localholst:8081/mobile-app-ws/users/email-verification?token=sdfsdf
-    @GetMapping(path = "email-verification",
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    @GetMapping(path = "/email-verification", produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.APPLICATION_XML_VALUE })
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 
         OperationStatusModel returnValue = new OperationStatusModel();
         returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
 
-        boolean isVerified = userService.verifyEmailToken(token);
+        try {
+            boolean isVerified = userService.verifyEmailToken(token);
 
-        if(isVerified)
-        {
-            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
-        } else {
+            if(isVerified){
+                System.out.println("SUCCESS");
+                returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+            }
+
+        } catch (Exception e) {
+            System.out.println("FAILING");
             returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
         }
 
         return returnValue;
+
+//        return returnValue;
     }
 }
+
+
+
+
+
+
+
+
+
