@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>com.springframework</groupId>
-    <artifactId>movile-app-ws</artifactId>
+    <artifactId>mobile-app-ws</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mobile-app-ws</name>
     <description>Demo project for Spring Boot</description>

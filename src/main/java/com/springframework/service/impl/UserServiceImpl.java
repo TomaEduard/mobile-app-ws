@@ -4,6 +4,7 @@ import com.springframework.exceptions.UserServiceException;
 import com.springframework.io.entity.UserEntity;
 import com.springframework.io.repository.UserRepository;
 import com.springframework.service.UserService;
+import com.springframework.shared.AmazonSES;
 import com.springframework.shared.Utils;
 import com.springframework.shared.dto.AddressDTO;
 import com.springframework.shared.dto.UserDto;
@@ -34,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    AmazonSES amazonSES;
 
     // #2 of 3 find the username(email) in the database
     @Override
@@ -96,6 +100,9 @@ public class UserServiceImpl implements UserService {
 //        UserDto returnValue = new UserDto();
 //        BeanUtils.copyProperties(storedUserDetails, returnValue);
         UserDto returnValue = modelMapper.map(storedUserDetails, UserDto.class);
+
+        // Send an email message to user to verify their email address
+        amazonSES.verifyEmail(returnValue);
 
         return returnValue;
     }

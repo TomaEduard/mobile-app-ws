@@ -25,7 +25,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users") // http://localhost:8081/users
-@CrossOrigin(origins= "http://localhost:8088")
+//@CrossOrigin(origins= "http://localhost:8088")
 public class UserController {
 
     @Autowired
@@ -109,7 +109,7 @@ public class UserController {
         return returnValue;
     }
 
-    // http://localholst:8081/mobile-app-ws/users/{userId}/addresses
+    // http://localholst:8080/mobile-app-ws/users/{userId}/addresses
     @GetMapping(path = "/{userId}/addresses",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public Resources<AddressesRest> getUserAddresses(@PathVariable String userId) {
@@ -135,7 +135,7 @@ public class UserController {
         return new Resources<>(addressesRestList);
     }
 
-    // http://localholst:8081/mobile-app-ws/users/{userId}/addresses/{addressId}
+    // http://localholst:8080/mobile-app-ws/users/{userId}/addresses/{addressId}
     @GetMapping(path = "/{userId}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public Resource<AddressesRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
@@ -159,7 +159,7 @@ public class UserController {
         return new Resource<>(returnValue);
     }
 
-    // http://localholst:8081/mobile-app-ws/users/email-verification?token=sdfsdf
+    // http://localholst:8080/mobile-app-ws/users/email-verification?token=sdfsdf
     @GetMapping(path = "/email-verification", produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE })
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
@@ -181,9 +181,8 @@ public class UserController {
         }
 
         return returnValue;
-
-//        return returnValue;
     }
+
 }
 
 
