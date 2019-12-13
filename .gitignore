@@ -1,4 +1,9 @@
 ######################
+# Java Application
+######################
+/src/main/java/com/springframework/security/SecurityConstants.java
+
+######################
 # Project Specific
 ######################
 /build/www/**

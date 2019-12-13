@@ -12,7 +12,12 @@ public class SecurityConstants {
     public static final String PASSWORD_RESET_REQUEST_URL = "/users/password-reset-request";
     public static final String PASSWORD_RESET_URL = "/users/password-reset";
     public static final String H2_CONSOLE = "/h2-console/**";
-//    public static final String TOKEN_SECRET = "jf9i4j9u83nfl0pm5zi2";
+    //    public static final String TOKEN_SECRET = "jf9i4j9u83nfl0pm5zi2";
+
+    // *** Amazon IAM ***
+    public static final String ACCESS_KEY_ID = "test";
+    public static final String SECRET_KEY = "test";
+
 
     public static String getTokenSecret(){
         AppProperties appProperties = (AppProperties) SpringApplicationContext.getBean("AppProperties");

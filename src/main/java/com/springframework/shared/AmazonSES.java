@@ -1,5 +1,6 @@
 package com.springframework.shared;
 
+import com.springframework.security.SecurityConstants;
 import com.springframework.shared.dto.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -60,10 +61,8 @@ public class AmazonSES {
     public void verifyEmail(UserDto userDto) {
 
         // You can also set your keys this way. And it will work!
-        System.setProperty("aws.accessKeyId", "<YOUR KEY ID HERE>");
-        System.setProperty("aws.secretKey", "<SECRET KEY HERE>");
-//        System.setProperty("aws.accessKeyId", "AKIA6JSTCFZMXGFIKMHF");
-//        System.setProperty("aws.secretKey", "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");
+        System.setProperty("aws.accessKeyId", SecurityConstants.ACCESS_KEY_ID);
+        System.setProperty("aws.secretKey", SecurityConstants.SECRET_KEY);
 
         AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.standard().withRegion(Regions.EU_CENTRAL_1).build();
 
