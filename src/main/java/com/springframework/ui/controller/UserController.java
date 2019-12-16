@@ -4,6 +4,7 @@ import com.springframework.service.AddressService;
 import com.springframework.service.UserService;
 import com.springframework.shared.dto.AddressDTO;
 import com.springframework.shared.dto.UserDto;
+import com.springframework.ui.transfer.request.PasswordResetRequestModel;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.*;
 import org.modelmapper.ModelMapper;
@@ -160,7 +161,8 @@ public class UserController {
     }
 
     // http://localholst:8080/mobile-app-ws/users/email-verification?token=sdfsdf
-    @GetMapping(path = "/email-verification", produces = { MediaType.APPLICATION_JSON_VALUE,
+    @GetMapping(path = "/email-verification",
+            produces = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE })
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 
@@ -178,6 +180,25 @@ public class UserController {
         } catch (Exception e) {
             System.out.println("FAILING");
             returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+        }
+
+        return returnValue;
+    }
+
+    // http://localholst:8080/mobile-app-ws/users/password-reset-request
+    @PostMapping(path = "/password-reset-request",
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+
+        OperationStatusModel returnValue = new OperationStatusModel();
+        returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
+        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+
+        boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+        if(operationResult) {
+            returnValue.setOperationName(RequestOperationStatus.SUCCESS.name());
         }
 
         return returnValue;

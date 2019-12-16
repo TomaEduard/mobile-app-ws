@@ -1,7 +1,7 @@
 ######################
 # Java Application
 ######################
-mobile-app-ws/src/main/java/com/springframework/security/SecurityConstants/
+src/main/java/com/springframework/security/SecurityConstants.java
 
 ######################
 # Project Specific

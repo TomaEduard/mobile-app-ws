@@ -69,5 +69,17 @@ public class Utils {
 
         return token;
     }
+
+    public static String generatePasswordResetToken(String publicUserId) {
+        String token = Jwts.builder()
+                .setSubject(publicUserId)
+                // generate a Date from today + SecurityConstants.EXPIRATION_TIME(10days) which is named Expiration
+                .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.PASSWORD_RESET_EXPIRATION_TIME))
+                // use getTokenSecret() method from SecurityConstants to get the tokenSecret from application.propetie
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+                .compact();
+
+        return token;
+    }
 }
 

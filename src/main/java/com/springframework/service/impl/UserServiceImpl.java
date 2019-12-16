@@ -1,7 +1,9 @@
 package com.springframework.service.impl;
 
 import com.springframework.exceptions.UserServiceException;
+import com.springframework.io.entity.PasswordResetTokenEntity;
 import com.springframework.io.entity.UserEntity;
+import com.springframework.io.repository.PasswordResetTokenRepository;
 import com.springframework.io.repository.UserRepository;
 import com.springframework.service.UserService;
 import com.springframework.shared.AmazonSES;
@@ -14,7 +16,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Autowired
+    PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
     Utils utils;
 
     @Autowired
@@ -38,6 +42,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     AmazonSES amazonSES;
+
+
 
     // #2 of 3 find the username(email) in the database
     @Override
@@ -187,6 +193,32 @@ public class UserServiceImpl implements UserService {
             userRepository.save(userEntity);
             returnValue = true;
         }
+
+        return returnValue;
+    }
+
+    @Override
+    public boolean requestPasswordReset(String email) {
+
+        boolean returnValue = false;
+
+        UserEntity userEntity = userRepository.findByEmail(email);
+
+        if( userEntity == null) {
+            return returnValue;
+        }
+
+        String token = Utils.generatePasswordResetToken(userEntity.getUserId());
+
+        PasswordResetTokenEntity passwordResetTokenEntity = new PasswordResetTokenEntity();
+        passwordResetTokenEntity.setToken(token);
+        passwordResetTokenEntity.setUserEntity(userEntity);
+        passwordResetTokenRepository.save(passwordResetTokenEntity);
+
+        returnValue = new AmazonSES().sendPasswordResetRequest(
+                userEntity.getFirstName(),
+                userEntity.getEmail(),
+                token);
 
         return returnValue;
     }
