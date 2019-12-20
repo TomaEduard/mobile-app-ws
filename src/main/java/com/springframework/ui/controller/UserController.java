@@ -217,7 +217,7 @@ public class UserController {
         returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
 
         if(operationResult) {
-            returnValue.setOperationName(RequestOperationStatus.SUCCESS.name());
+            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         }
 
         return returnValue;
