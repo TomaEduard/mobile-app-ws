@@ -4,6 +4,7 @@ import com.springframework.service.AddressService;
 import com.springframework.service.UserService;
 import com.springframework.shared.dto.AddressDTO;
 import com.springframework.shared.dto.UserDto;
+import com.springframework.ui.transfer.request.PasswordResetModel;
 import com.springframework.ui.transfer.request.PasswordResetRequestModel;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.*;
@@ -196,6 +197,24 @@ public class UserController {
         returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
 
         boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+        if(operationResult) {
+            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+        }
+
+        return returnValue;
+    }
+    // http://localholst:8080/mobile-app-ws/users/password-reset
+    @PostMapping(path = "/password-reset",
+           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {
+
+        boolean operationResult = userService.resetPassword(passwordRequestModel.getToken(), passwordRequestModel.getPassword());
+
+        OperationStatusModel returnValue = new OperationStatusModel();
+
+        returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
 
         if(operationResult) {
             returnValue.setOperationName(RequestOperationStatus.SUCCESS.name());

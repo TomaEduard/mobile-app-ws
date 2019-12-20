@@ -33,9 +33,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
 
-        // public api for reset password
+        // public api for reset password generate token and sed email
         .permitAll()
         .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
+
+        // public api for reset password email with token + password will call this api
+        .permitAll()
+        .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
 
         // protect api
         // .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
