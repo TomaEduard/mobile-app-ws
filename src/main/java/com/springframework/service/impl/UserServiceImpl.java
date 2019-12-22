@@ -43,8 +43,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     AmazonSES amazonSES;
 
-
-
     // #2 of 3 find the username(email) in the database
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -77,7 +75,7 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
 
         // check if the email already exist in db
-        if (userRepository.findByEmail(userDto.getEmail()) != null) throw new RuntimeException("Record is already exists!");
+        if (userRepository.findByEmail(userDto.getEmail()) != null) throw new UserServiceException("Record is already exists!");
 
         // generateAddressId for every address
         for (int i = 0; i< userDto.getAddresses().size(); i++){
@@ -90,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
 //        UserEntity userEntity = new UserEntity();
 //        BeanUtils.copyProperties(userDto, userEntity);
-            ModelMapper modelMapper = new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
         UserEntity userEntity = modelMapper.map(userDto, UserEntity.class);
 
         // set userId and generated random sting
