@@ -7,7 +7,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
 
+import javax.xml.crypto.Data;
 import java.security.SecureRandom;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -49,13 +54,24 @@ public class Utils {
             Date tokenExpirationDate = claims.getExpiration();
             Date todayDate = new Date();
 
-            // if return true the date is not expired
+            // if return true the date is expired
             returnValue = tokenExpirationDate.before(todayDate);
+            System.out.println("tokenExpirationDate :" + tokenExpirationDate);
+            System.out.println("todayDate :" + todayDate);
+            System.out.println("returnValue :" + returnValue);
         } catch (ExpiredJwtException ex) {
             returnValue = true;
         }
 
         return returnValue;
+    }
+
+    public String generateExpiredTokenForTest() {
+
+        return Jwts.builder()
+                .setExpiration(new Date(System.currentTimeMillis() - SecurityConstants.EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.getTokenSecret())
+                .compact();
     }
 
     public String generateEmailVerificationToken(String publicUserId) {

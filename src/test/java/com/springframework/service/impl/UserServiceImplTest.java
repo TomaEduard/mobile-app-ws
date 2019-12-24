@@ -25,7 +25,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import org.mockito.Mockito;
+
 class UserServiceImplTest {
 
     @InjectMocks
@@ -43,10 +43,10 @@ class UserServiceImplTest {
     @Mock
     AmazonSES amazonSES;
 
-    String userId = "kjdsf89123kls";
-    String addressId = "vhb80973u9ipjom";
-    String encryptedPassword = "1jkld823klsf";
-    String emailVerificationToken = "lvYe915JKMVCuclasdikgV";
+    String USER_ID = "kjdsf89123kls";
+    String ADDRESS_ID = "vhb80973u9ipjom";
+    String ENCRYPTED_PASSWORD = "1jkld823klsf";
+    String EMAIL_VERIFICATION_TOKEN = "lvYe915JKMVCuclasdikgV";
 
     UserEntity userEntity;
 
@@ -56,13 +56,13 @@ class UserServiceImplTest {
 
         userEntity = new UserEntity();
         userEntity.setId(1L);
-        userEntity.setUserId(userId);
+        userEntity.setUserId(USER_ID);
         userEntity.setFirstName("Eduard");
         userEntity.setLastName("Toma");
         userEntity.setEmail("test@test.com");
         userEntity.setEmailVerificationToken("5sTY9hijuokw");
-        userEntity.setEncryptedPassword(encryptedPassword);
-        userEntity.setEmailVerificationToken(emailVerificationToken);
+        userEntity.setEncryptedPassword(ENCRYPTED_PASSWORD);
+        userEntity.setEmailVerificationToken(EMAIL_VERIFICATION_TOKEN);
         userEntity.setAddresses(getAddressesEntity());
     }
 
@@ -120,9 +120,9 @@ class UserServiceImplTest {
     final void testCreateUser() {
         // mock methods
         when(userRepository.findByEmail(anyString())).thenReturn(null);
-        when(utils.generateAddressId(anyInt())).thenReturn(addressId);
-        when(utils.generateUserId(anyInt())).thenReturn(userId);
-        when(bCryptPasswordEncoder.encode(anyString())).thenReturn(encryptedPassword);
+        when(utils.generateAddressId(anyInt())).thenReturn(ADDRESS_ID);
+        when(utils.generateUserId(anyInt())).thenReturn(USER_ID);
+        when(bCryptPasswordEncoder.encode(anyString())).thenReturn(ENCRYPTED_PASSWORD);
         when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
         doNothing().when(amazonSES).verifyEmail(any(UserDto.class));
 
