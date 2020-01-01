@@ -8,7 +8,7 @@ import com.springframework.io.repository.UserRepository;
 import com.springframework.service.UserService;
 import com.springframework.shared.AmazonSES;
 import com.springframework.shared.Utils;
-import com.springframework.shared.dto.AddressDTO;
+import com.springframework.shared.dto.AddressDto;
 import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.response.ErrorMessages;
 import org.modelmapper.ModelMapper;
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 
         // generateAddressId for every address
         for (int i = 0; i< userDto.getAddresses().size(); i++){
-            AddressDTO address = userDto.getAddresses().get(i);
+            AddressDto address = userDto.getAddresses().get(i);
             address.setUserDetails(userDto);
             address.setAddressId(utils.generateAddressId(30));
 

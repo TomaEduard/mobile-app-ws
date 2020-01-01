@@ -2,7 +2,7 @@ package com.springframework.ui.controller;
 
 import com.springframework.service.AddressService;
 import com.springframework.service.UserService;
-import com.springframework.shared.dto.AddressDTO;
+import com.springframework.shared.dto.AddressDto;
 import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.request.PasswordResetModel;
 import com.springframework.ui.transfer.request.PasswordResetRequestModel;
@@ -15,19 +15,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/users") // http://localhost:8081/users
-//@CrossOrigin(origins= "http://localhost:8088")
+@RequestMapping("/users") // http://localhost:8080/users
+@CrossOrigin(origins = {"http://localhost:8088"})
 public class UserController {
 
     @Autowired
@@ -40,19 +43,17 @@ public class UserController {
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
 
-//        UserDto userDto = new UserDto();
-//        BeanUtils.copyProperties(userDetailsRequestModel, userDto);
         ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = modelMapper.map(userDetailsRequestModel, UserDto.class);
 
         UserDto createdUser = userService.createUser(userDto);
 
-//        BeanUtils.copyProperties(createdUser, returnValue);
         UserRest returnValue = modelMapper.map(createdUser, UserRest.class);
 
         return returnValue;
     }
 
+    //    http://localhost:8080/mobile-app-ws/users/{userId}
     @GetMapping(path = "/{userId}")
     public UserRest getUser(@PathVariable String userId) {
 
@@ -63,6 +64,7 @@ public class UserController {
         return returnValue;
     }
 
+    //    http://localhost:8080/mobile-app-ws/users/{userId}
     @PutMapping(path = "/{userId}",
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -73,12 +75,13 @@ public class UserController {
 
         UserDto updateUser = userService.updateUser(userId, userDto);
 
-        UserRest returnValue = new UserRest();
-        BeanUtils.copyProperties(updateUser, returnValue);
+        UserRest returnValue = new ModelMapper().map(updateUser, UserRest.class);
 
         return returnValue;
+
     }
 
+    //    http://localhost:8080/mobile-app-ws/users/{userId}
     @DeleteMapping(path = "/{userId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public OperationStatusModel deleteUser(@PathVariable String userId) {
@@ -101,48 +104,48 @@ public class UserController {
 
         List<UserDto> users = userService.getUsers(page, limit);
 
-        // for every users retrieve create, copy properties to a userRest and add this to an ArrayList
-        for (UserDto userDto : users) {
-            UserRest userRest = new UserRest();
-            BeanUtils.copyProperties(userDto, userRest);
-            returnValue.add(userRest);
-        }
+        Type listType = new TypeToken<List<UserRest>>() {
+        }.getType();
+
+        returnValue = new ModelMapper().map(users, listType);
 
         return returnValue;
     }
 
-    // http://localholst:8080/mobile-app-ws/users/{userId}/addresses
+    // http://localhost:8080/mobile-app-ws/users/{userId}/addresses
     @GetMapping(path = "/{userId}/addresses",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
-    public Resources<AddressesRest> getUserAddresses(@PathVariable String userId) {
+    public Resources<Object> getUserAddresses(@PathVariable String userId) {
 
-        List<AddressDTO> addressDTO = addressService.getAddresses(userId);
+        List<AddressesRest> addressesListRestModel = new ArrayList<>();
 
-        List<AddressesRest> addressesRestList = new ArrayList<>();
+        List<AddressDto> addressDTO = addressService.getAddresses(userId);
 
         if (addressDTO != null && !addressDTO.isEmpty()) {
-            Type listType = new TypeToken<List<AddressesRest>>() {}.getType();
-            addressesRestList = new ModelMapper().map(addressDTO, listType);
+            Type listType = new TypeToken<List<AddressesRest>>() {
+            }.getType();
+            addressesListRestModel = new ModelMapper().map(addressDTO, listType);
 
             // added 2 links for every address 
-            for (AddressesRest addressRest : addressesRestList) {
+            for (AddressesRest addressRest : addressesListRestModel) {
                 Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressRest.getAddressId())).withSelfRel();
                 addressRest.add(addressLink);
 
                 Link userLink = linkTo(methodOn(UserController.class).getUser(userId)).withRel("user");
                 addressRest.add(userLink);
             }
+
         }
 
-        return new Resources<>(addressesRestList);
+        return new Resources<>(Collections.singleton(addressesListRestModel));
     }
 
-    // http://localholst:8080/mobile-app-ws/users/{userId}/addresses/{addressId}
+    // http://localhost:8080/mobile-app-ws/users/{userId}/addresses/{addressId}
     @GetMapping(path = "/{userId}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     public Resource<AddressesRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
 
-        AddressDTO addressDTO = addressService.getAddress(addressId);
+        AddressDto addressDTO = addressService.getAddress(addressId);
 
 //        Link addressLink = linkTo(UserController.class).slash(userId).slash("addresses").slash(addressId).withSelfRel();
         Link addressLink = linkTo(methodOn(UserController.class).getUserAddress(userId, addressId)).withSelfRel();
@@ -161,10 +164,10 @@ public class UserController {
         return new Resource<>(returnValue);
     }
 
-    // http://localholst:8080/mobile-app-ws/users/email-verification?token=sdfsdf
+    // http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfsdf
     @GetMapping(path = "/email-verification",
-            produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE })
+            produces = {MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE})
     public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 
         OperationStatusModel returnValue = new OperationStatusModel();
@@ -173,7 +176,7 @@ public class UserController {
         try {
             boolean isVerified = userService.verifyEmailToken(token);
 
-            if(isVerified){
+            if (isVerified) {
                 System.out.println("SUCCESS");
                 returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
             }
@@ -186,7 +189,7 @@ public class UserController {
         return returnValue;
     }
 
-    // http://localholst:8080/mobile-app-ws/users/password-reset-request
+    // http://localhost:8080/mobile-app-ws/users/password-reset-request
     @PostMapping(path = "/password-reset-request",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -198,17 +201,38 @@ public class UserController {
 
         boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
 
-        if(operationResult) {
+        if (operationResult) {
             returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         }
 
         return returnValue;
     }
-    // http://localholst:8080/mobile-app-ws/users/password-reset
-    @PostMapping(path = "/password-reset",
-           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {
 
+//     http://localhost:8080/mobile-app-ws/users/password-reset
+//    @PostMapping(path = "/password-reset",
+//           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+//    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {
+//
+//        boolean operationResult = userService.resetPassword(passwordRequestModel.getToken(), passwordRequestModel.getPassword());
+//
+//        OperationStatusModel returnValue = new OperationStatusModel();
+//
+//        returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+//        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+//
+//        if(operationResult) {
+//            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+//        }
+//
+//        return returnValue;
+//    }
+
+    // http://localhost:8080/mobile-app-ws/users/password-reset
+    @CrossOrigin(origins = {"http://localhost:8088"})
+    @PostMapping(path = "/password-reset",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<OperationStatusModel> resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {
+        System.out.println("1asd");
         boolean operationResult = userService.resetPassword(passwordRequestModel.getToken(), passwordRequestModel.getPassword());
 
         OperationStatusModel returnValue = new OperationStatusModel();
@@ -216,11 +240,11 @@ public class UserController {
         returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
         returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
 
-        if(operationResult) {
+        if (operationResult) {
             returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
         }
 
-        return returnValue;
+        return new ResponseEntity<>(returnValue, HttpStatus.OK);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.springframework.shared.dto;
 
-import com.springframework.ui.transfer.request.AddressRequestModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +21,5 @@ public class UserDto implements Serializable {
     private String emailVerificationToken;
     private Boolean emailVerificationStatus = false;
     private String user;
-
-    private List<AddressDTO> addresses;
+    private List<AddressDto> addresses;
 }

@@ -1,7 +1,7 @@
 package com.springframework.ui.controller;
 
 import com.springframework.service.impl.UserServiceImpl;
-import com.springframework.shared.dto.AddressDTO;
+import com.springframework.shared.dto.AddressDto;
 import com.springframework.shared.dto.UserDto;
 import com.springframework.ui.transfer.response.UserRest;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,16 +48,16 @@ class UserControllerTest {
 
     }
 
-    private List<AddressDTO> getAddressesDTO() {
+    private List<AddressDto> getAddressesDTO() {
 
-        AddressDTO addressDTO = new AddressDTO();
+        AddressDto addressDTO = new AddressDto();
         addressDTO.setCity("Alba-Iulia");
         addressDTO.setCountry("Romania");
         addressDTO.setStreetName("123 Street name");
         addressDTO.setPostalCode("ABC123");
         addressDTO.setType("shipping");
 
-        AddressDTO BillingAddressDTO = new AddressDTO();
+        AddressDto billingAddressDto = new AddressDto();
         addressDTO.setCity("Alba-Iulia");
         addressDTO.setCountry("Romania");
         addressDTO.setStreetName("123 Street name");
@@ -65,11 +65,11 @@ class UserControllerTest {
         addressDTO.setType("billing");
 
         // cr8 addressDTOList and add addressDTO to it
-        List<AddressDTO> addressDTOList = new ArrayList<>();
-        addressDTOList.add(addressDTO);
-        addressDTOList.add(BillingAddressDTO);
+        List<AddressDto> addressDtoList = new ArrayList<>();
+        addressDtoList.add(addressDTO);
+        addressDtoList.add(billingAddressDto);
 
-        return addressDTOList;
+        return addressDtoList;
     }
 
     @Test

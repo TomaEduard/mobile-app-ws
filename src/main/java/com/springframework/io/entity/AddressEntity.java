@@ -39,7 +39,17 @@ public class AddressEntity implements Serializable {
     private String type;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // userId
-    private UserEntity userEntity;
+    @JoinColumn(name = "users_id") // Id of UserEntity
+    private UserEntity userDetails;
 
 }
+
+
+
+
+
+
+
+
+
+

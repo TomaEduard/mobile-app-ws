@@ -24,11 +24,13 @@ public class AmazonSES {
 
     final String PASSWORD_RESET_SUBJECT = "Password reset request";
 
+    // verification email messages
     // The HTML body for the email.
     final String HTMLBODY = "<h1>Please verify your email address</h1>"
             + "<p>Thank you for registering with our Movie App. To complete registration process and be able to log in,"
             + " click on the following link: "
             + "<a href='http://ec2-52-59-187-214.eu-central-1.compute.amazonaws.com:8080/verification-service/email-verification.html?token=$tokenValue'>"
+            + "<a href='http://localhost:8088/verification_service_war/email-verification.html?token=$tokenValue'>"
             + "Final step to complete your registration" + "</a><br/><br/>"
             + "Thank you! And we are waiting for you inside!";
 
@@ -37,13 +39,15 @@ public class AmazonSES {
             + "Thank you for registering with our Movie app. To complete registration process and be able to log in,"
             + " open then the following URL in your browser window: "
             + " http://ec2-52-59-187-214.eu-central-1.compute.amazonaws.com:8080/verification-service/email-verification.html?token=$tokenValue"
+            + " http://localhost:8088/verification_service_war/email-verification.html?token=$tokenValue"
             + " Thank you! And we are waiting for you inside!";
 
+    // password reset messages
     final String PASSWORD_RESET_HTMLBODY = "<h1>A request to reset your password</h1>"
             + "<p>Hi, $firstName!</p> "
             + "<p>Someone has requested to reset your password with our project. If it were not you, please ignore it."
             + " otherwise please click on the link below to set a new password: "
-            + "<a href='http://localhost:8080/verification-service/password-reset.html?token=$tokenValue'>"
+            + "<a href='http://localhost:8088/verification_service_war/password-reset.html?token=$tokenValue'>"
             + " Click this link to Reset Password"
             + "</a><br/><br/>"
             + "Thank you!";
@@ -53,7 +57,7 @@ public class AmazonSES {
             + "Hi, $firstName! "
             + "Someone has requested to reset your password with our project. If it were not you, please ignore it."
             + " otherwise please open the link below in your browser window to set a new password: "
-            + " http://localhost:8080/verification-service/password-reset.html?token=$tokenValue"
+            + " http://localhost:8088/verification_service_war/password-reset.html?token=$tokenValue"
             + " Thank you!";
 
 

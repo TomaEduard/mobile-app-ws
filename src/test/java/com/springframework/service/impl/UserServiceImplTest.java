@@ -6,7 +6,7 @@ import com.springframework.io.entity.UserEntity;
 import com.springframework.io.repository.UserRepository;
 import com.springframework.shared.AmazonSES;
 import com.springframework.shared.Utils;
-import com.springframework.shared.dto.AddressDTO;
+import com.springframework.shared.dto.AddressDto;
 import com.springframework.shared.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,16 +66,16 @@ class UserServiceImplTest {
         userEntity.setAddresses(getAddressesEntity());
     }
 
-    private List<AddressDTO> getAddressesDTO() {
+    private List<AddressDto> getAddressesDTO() {
 
-        AddressDTO addressDTO = new AddressDTO();
+        AddressDto addressDTO = new AddressDto();
         addressDTO.setCity("Alba-Iulia");
         addressDTO.setCountry("Romania");
         addressDTO.setStreetName("123 Street name");
         addressDTO.setPostalCode("ABC123");
         addressDTO.setType("shipping");
 
-        AddressDTO BillingAddressDTO = new AddressDTO();
+        AddressDto billingAddressDto = new AddressDto();
         addressDTO.setCity("Alba-Iulia");
         addressDTO.setCountry("Romania");
         addressDTO.setStreetName("123 Street name");
@@ -83,16 +83,16 @@ class UserServiceImplTest {
         addressDTO.setType("billing");
 
         // cr8 addressDTOList and add addressDTO to it
-        List<AddressDTO> addressDTOList = new ArrayList<>();
-        addressDTOList.add(addressDTO);
-        addressDTOList.add(BillingAddressDTO);
+        List<AddressDto> addressDtoList = new ArrayList<>();
+        addressDtoList.add(addressDTO);
+        addressDtoList.add(billingAddressDto);
 
-        return addressDTOList;
+        return addressDtoList;
     }
 
     private List<AddressEntity> getAddressesEntity() {
 
-        List<AddressDTO> addressDTOS = getAddressesDTO();
+        List<AddressDto> addressDTOS = getAddressesDTO();
         Type listType = new TypeToken<List<AddressEntity>>() {}.getType();
 
         return new ModelMapper().map(addressDTOS, listType);

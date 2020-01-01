@@ -25,34 +25,36 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-        .csrf().disable().authorizeRequests()
-        // public api for register
-        .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+                .cors().and()
+                .csrf().disable().authorizeRequests()
 
-        // public api for validated token and permit user to login
-        .permitAll()
-        .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
+                // public api for register
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
 
-        // public api for reset password generate token and sed email
-        .permitAll()
-        .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
+                // public api for validated token and permit user to login
+                .permitAll()
+                .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
 
-        // public api for reset password email with token + password will call this api
-        .permitAll()
-        .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
+                // public api for reset password generate token and sed email
+                .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
 
-        // protect api
-        // .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
-        .permitAll()
-        .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
+                // public api for reset password email with token + password will call this api
+                .permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
 
-        // validated token login
-        .addFilter(new AuthorizationFilter(authenticationManager()))
+                // protect api
+                // .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
+                .permitAll()
+                .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
 
-        // prevent cached session and reauthorizing all request receive
-        // we want all rest api(not login) contain header (Auth.. Bearer token) and reAuthorize
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                // validated token login
+                .addFilter(new AuthorizationFilter(authenticationManager()))
+
+                // prevent cached session and reauthorizing all request receive
+                // we want all rest api(not login) contain header (Auth.. Bearer token) and reAuthorize
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
     }
 
