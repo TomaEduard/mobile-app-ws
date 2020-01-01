@@ -29,23 +29,22 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .csrf().disable().authorizeRequests()
 
                 // public api for register
-                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
+                .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
 
                 // public api for validated token and permit user to login
-                .permitAll()
-                .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL)
+                .antMatchers(HttpMethod.GET, SecurityConstants.VERIFICATION_EMAIL_URL).permitAll()
 
                 // public api for reset password generate token and sed email
-                .permitAll()
-                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL)
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_REQUEST_URL).permitAll()
 
                 // public api for reset password email with token + password will call this api
-                .permitAll()
-                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL)
+                .antMatchers(HttpMethod.POST, SecurityConstants.PASSWORD_RESET_URL).permitAll()
+
+                // public api for h2-database
+                .antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
 
                 // protect api
                 // .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
-                .permitAll()
                 .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())
 
                 // validated token login
@@ -56,6 +55,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+                http.headers().frameOptions().disable();
     }
 
     @Override
