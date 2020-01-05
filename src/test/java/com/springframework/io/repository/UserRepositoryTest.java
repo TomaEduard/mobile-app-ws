@@ -130,7 +130,7 @@ class UserRepositoryTest {
 
 
     @Test
-    final void findUserByFirstName() {
+    final void findUserByFirstNameAndLastName() {
         String firstName = "Eduard";
         String lastName = "Toma";
 
@@ -142,10 +142,21 @@ class UserRepositoryTest {
         assertEquals(firstName, userEntity1.getFirstName());
 
     }
+
+    @Test
+    final void findUserByFirstNameAndLastNameWithNamedParams() {
+        String firstName = "Eduard";
+        String lastName = "Toma";
+
+        List<UserEntity> users = userRepository.findUserByFirstNameAndLastNameWithNamedParams(firstName, lastName);
+        assertNotNull(users);
+        assertEquals(2, users.size());
+
+        UserEntity userEntity1 = users.get(0);
+        assertEquals(firstName, userEntity1.getFirstName());
+
+    }
 }
-
-
-
 
 
 
