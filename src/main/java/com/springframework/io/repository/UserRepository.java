@@ -33,6 +33,13 @@ public interface UserRepository extends PagingAndSortingRepository<UserEntity, L
     List<UserEntity> findUserByFirstNameAndLastNameWithNamedParams(
             @Param("firstName")String firstName, @Param("lastName")String lastName);
 
+    // nativeQuery
+    @Query(value = "select * from Users u where first_name LIKE %:keyword% or last_name LIKE %:keyword%", nativeQuery = true)
+    List<UserEntity> findUserByKeyword(@Param("keyword")String keyword);
+
+    // JPA alternative
+    List<UserEntity> findByFirstNameContainingOrLastNameContaining(String partialFirstName, String partialLastName);
+
 
 }
 

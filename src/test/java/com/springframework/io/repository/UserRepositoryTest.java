@@ -15,8 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(SpringExtension.class)
@@ -128,7 +127,6 @@ class UserRepositoryTest {
         assertEquals(2, userEntities.size());
     }
 
-
     @Test
     final void findUserByFirstNameAndLastName() {
         String firstName = "Eduard";
@@ -154,6 +152,32 @@ class UserRepositoryTest {
 
         UserEntity userEntity1 = users.get(0);
         assertEquals(firstName, userEntity1.getFirstName());
+
+    }
+
+    @Test
+    final void testFindUserByKeyword() {
+        String keyword = "uar";
+
+        List<UserEntity> users = userRepository.findUserByKeyword(keyword);
+        assertNotNull(users);
+        assertEquals(2, users.size());
+
+        UserEntity userEntity1 = users.get(0);
+        assertTrue(userEntity1.getLastName().contains(keyword) || userEntity1.getFirstName().contains(keyword));
+
+    }
+
+    @Test
+    final void testFindUserByKeywordByJPAMethod() {
+        String keyword = "uar";
+
+        List<UserEntity> users = userRepository.findByFirstNameContainingOrLastNameContaining(keyword, "To");
+        assertNotNull(users);
+        assertEquals(2, users.size());
+
+        UserEntity userEntity1 = users.get(0);
+        assertTrue(userEntity1.getLastName().contains(keyword) || userEntity1.getFirstName().contains(keyword));
 
     }
 }
