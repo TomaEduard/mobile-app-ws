@@ -2,6 +2,7 @@ package com.springframework.security;
 
 import com.springframework.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,10 +10,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import sun.security.util.SecurityConstants;
+import java.util.Arrays;
+import java.util.Collections;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -55,7 +58,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-                http.headers().frameOptions().disable();
+        http.headers().frameOptions().disable();
     }
 
     @Override
@@ -69,4 +72,21 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+
+//        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8088"));
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/users/login", configuration);
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+    }
 }

@@ -30,7 +30,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/users") // http://localhost:8080/users
-@CrossOrigin(origins = {"http://localhost:8088"})
+//@CrossOrigin(origins = {"http://localhost:8088"})
 public class UserController {
 
     @Autowired
@@ -208,27 +208,7 @@ public class UserController {
         return returnValue;
     }
 
-//     http://localhost:8080/mobile-app-ws/users/password-reset
-//    @PostMapping(path = "/password-reset",
-//           consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-//    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {
-//
-//        boolean operationResult = userService.resetPassword(passwordRequestModel.getToken(), passwordRequestModel.getPassword());
-//
-//        OperationStatusModel returnValue = new OperationStatusModel();
-//
-//        returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
-//        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
-//
-//        if(operationResult) {
-//            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
-//        }
-//
-//        return returnValue;
-//    }
-
     // http://localhost:8080/mobile-app-ws/users/password-reset
-    @CrossOrigin(origins = {"http://localhost:8088"})
     @PostMapping(path = "/password-reset",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<OperationStatusModel> resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {
