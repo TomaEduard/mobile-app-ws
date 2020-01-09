@@ -26,10 +26,10 @@ public class SwaggerConfig {
     List<VendorExtension> vendorExtensions = new ArrayList<>();
 
     ApiInfo apiInfo = new ApiInfo(
-            "Photo app RESTful Web Service documentation",
-            "This pages documents Photo app RESTful Web Service endpoints",
+            "Movie App RESTful Web Service documentation",
+            "This pages documents Movie App RESTful Web Service endpoints",
             "1.0",
-            "http://www.appsdeveloperblog.com/service.html",
+            "http://localhost:8080/movie-app-ws/service.html",
             contact,
             "Apache 2.0",
             "http://www.apache.org/licenses/LICENSE-2.0",
@@ -39,7 +39,8 @@ public class SwaggerConfig {
     public Docket apiDocket() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-//                .protocols(new HashSet<>(Arrays.asList("HTTP", "HTTPs")))
+                .protocols(new HashSet<>(Arrays.asList("HTTP", "HTTPs")))
+                .apiInfo(apiInfo)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.springframework.ui.controller"))
                 .paths(PathSelectors.any())
