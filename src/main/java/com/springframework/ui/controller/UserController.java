@@ -8,6 +8,8 @@ import com.springframework.ui.transfer.request.PasswordResetModel;
 import com.springframework.ui.transfer.request.PasswordResetRequestModel;
 import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.*;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
@@ -31,6 +33,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/users") // http://localhost:8080/users
 //@CrossOrigin(origins = {"http://localhost:8088"})
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -53,8 +56,29 @@ public class UserController {
         return returnValue;
     }
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
+    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
+                                   @RequestParam(value = "limit", defaultValue = "20") int limit) {
+
+        List<UserRest> returnValue = new ArrayList<>();
+
+        List<UserDto> users = userService.getUsers(page, limit);
+
+        Type listType = new TypeToken<List<UserRest>>(){}.getType();
+
+        returnValue = new ModelMapper().map(users, listType);
+
+        return returnValue;
+    }
+
     //    http://localhost:8080/mobile-app-ws/users/{userId}
     @GetMapping(path = "/{userId}")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     public UserRest getUser(@PathVariable String userId) {
 
         UserDto userDto = userService.getUserByUserId(userId);
@@ -68,6 +92,9 @@ public class UserController {
     @PutMapping(path = "/{userId}",
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     public UserRest updateUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel, @PathVariable String userId) {
 
         UserDto userDto = new UserDto();
@@ -84,6 +111,9 @@ public class UserController {
     //    http://localhost:8080/mobile-app-ws/users/{userId}
     @DeleteMapping(path = "/{userId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     public OperationStatusModel deleteUser(@PathVariable String userId) {
 
         OperationStatusModel operationStatusModel = new OperationStatusModel();
@@ -96,25 +126,12 @@ public class UserController {
         return operationStatusModel;
     }
 
-    @GetMapping(produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
-                                   @RequestParam(value = "limit", defaultValue = "20") int limit) {
-
-        List<UserRest> returnValue = new ArrayList<>();
-
-        List<UserDto> users = userService.getUsers(page, limit);
-
-        Type listType = new TypeToken<List<UserRest>>() {
-        }.getType();
-
-        returnValue = new ModelMapper().map(users, listType);
-
-        return returnValue;
-    }
-
     // http://localhost:8080/mobile-app-ws/users/{userId}/addresses
     @GetMapping(path = "/{userId}/addresses",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     public Resources<Object> getUserAddresses(@PathVariable String userId) {
 
         List<AddressesRest> addressesListRestModel = new ArrayList<>();
@@ -143,6 +160,9 @@ public class UserController {
     // http://localhost:8080/mobile-app-ws/users/{userId}/addresses/{addressId}
     @GetMapping(path = "/{userId}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
+    })
     public Resource<AddressesRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
 
         AddressDto addressDTO = addressService.getAddress(addressId);

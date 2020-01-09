@@ -46,6 +46,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 // public api for h2-database
                 .antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
 
+                // public api for swagger
+                .antMatchers("/v2/api-docs", "/configuration/**", "swagger-ui.html#/**" , "/swagger*/**", "/webjars/**").permitAll()
+
                 // protect api
                 // .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));
                 .anyRequest().authenticated().and().addFilter(getAuthenticationFilter())

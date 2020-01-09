@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class AddressRequestModel {
 
-    private String addressId;
     private String city;
     private String country;
     private String streetName;
