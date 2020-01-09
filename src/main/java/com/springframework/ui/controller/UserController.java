@@ -74,7 +74,7 @@ public class UserController {
         return returnValue;
     }
 
-    //    http://localhost:8080/mobile-app-ws/users/{userId}
+    //    http://localhost:8080/movie-app-ws/users/{userId}
     @GetMapping(path = "/{userId}")
     @ApiImplicitParams({
             @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
@@ -88,7 +88,7 @@ public class UserController {
         return returnValue;
     }
 
-    //    http://localhost:8080/mobile-app-ws/users/{userId}
+    //    http://localhost:8080/movie-app-ws/users/{userId}
     @PutMapping(path = "/{userId}",
             consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -108,7 +108,7 @@ public class UserController {
 
     }
 
-    //    http://localhost:8080/mobile-app-ws/users/{userId}
+    //    http://localhost:8080/movie-app-ws/users/{userId}
     @DeleteMapping(path = "/{userId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ApiImplicitParams({
@@ -126,7 +126,7 @@ public class UserController {
         return operationStatusModel;
     }
 
-    // http://localhost:8080/mobile-app-ws/users/{userId}/addresses
+    // http://localhost:8080/movie-app-ws/users/{userId}/addresses
     @GetMapping(path = "/{userId}/addresses",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     @ApiImplicitParams({
@@ -157,7 +157,7 @@ public class UserController {
         return new Resources<>(Collections.singleton(addressesListRestModel));
     }
 
-    // http://localhost:8080/mobile-app-ws/users/{userId}/addresses/{addressId}
+    // http://localhost:8080/movie-app-ws/users/{userId}/addresses/{addressId}
     @GetMapping(path = "/{userId}/addresses/{addressId}",
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
     @ApiImplicitParams({
@@ -184,7 +184,7 @@ public class UserController {
         return new Resource<>(returnValue);
     }
 
-    // http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfsdf
+    // http://localhost:8080/movie-app-ws/users/email-verification?token=sdfsdf
     @GetMapping(path = "/email-verification",
             produces = {MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE})
@@ -209,7 +209,7 @@ public class UserController {
         return returnValue;
     }
 
-    // http://localhost:8080/mobile-app-ws/users/password-reset-request
+    // http://localhost:8080/movie-app-ws/users/password-reset-request
     @PostMapping(path = "/password-reset-request",
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -228,7 +228,7 @@ public class UserController {
         return returnValue;
     }
 
-    // http://localhost:8080/mobile-app-ws/users/password-reset
+    // http://localhost:8080/movie-app-ws/users/password-reset
     @PostMapping(path = "/password-reset",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<OperationStatusModel> resetPassword(@RequestBody PasswordResetModel passwordRequestModel) {

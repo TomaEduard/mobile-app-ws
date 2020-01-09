@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class MobileAppWsApplication extends SpringBootServletInitializer {
+public class MovieAppWsApplication extends SpringBootServletInitializer {
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
@@ -17,7 +17,7 @@ public class MobileAppWsApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(MobileAppWsApplication.class, args);
+        SpringApplication.run(MovieAppWsApplication.class, args);
     }
 
     @Bean

@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>com.springframework</groupId>
-    <artifactId>mobile-app-ws</artifactId>
+    <artifactId>movie-app-ws</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mobile-app-ws</name>
+    <name>movie-app-ws</name>
     <description>Demo project for Spring Boot</description>
     <packaging>war</packaging>
 
