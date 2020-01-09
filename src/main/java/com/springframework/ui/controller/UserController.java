@@ -10,6 +10,7 @@ import com.springframework.ui.transfer.request.UserDetailsRequestModel;
 import com.springframework.ui.transfer.response.*;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.BeanUtils;
@@ -75,6 +76,8 @@ public class UserController {
     }
 
     //    http://localhost:8080/movie-app-ws/users/{userId}
+    @ApiOperation(value = "The Get UserDetails Web Service Endpoint by userId",
+            notes = "${userController.GetUser.ApiOperation.Notes}")
     @GetMapping(path = "/{userId}")
     @ApiImplicitParams({
             @ApiImplicitParam(name="Authorization", value = "${userController.authorizationHeader.description}", paramType = "header")
