@@ -1,5 +1,6 @@
 package com.springframework.ui.controller;
 
+import com.springframework.exceptions.error.ApiError;
 import com.springframework.service.AddressService;
 import com.springframework.service.UserService;
 import com.springframework.shared.dto.AddressDto;
@@ -21,12 +22,15 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -43,9 +47,28 @@ public class UserController {
     @Autowired
     AddressService addressService;
 
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ApiError handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        ApiError apiError = new ApiError(400, "Validation error", request.getServletPath());
+
+        BindingResult result = exception.getBindingResult();
+
+        Map<String, String> validationErrors = new HashMap<>();
+
+        // create error key, message
+        for (FieldError fieldError : result.getFieldErrors()) {
+            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        // save errors in validationErrors variable
+        apiError.setValidationErrors(validationErrors);
+
+        return apiError;
+    }
+
     @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
             produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public UserRest createUser(@RequestBody UserDetailsRequestModel userDetailsRequestModel) {
+    public UserRest createUser(@Valid @RequestBody UserDetailsRequestModel userDetailsRequestModel) {
 
         ModelMapper modelMapper = new ModelMapper();
         UserDto userDto = modelMapper.map(userDetailsRequestModel, UserDto.class);

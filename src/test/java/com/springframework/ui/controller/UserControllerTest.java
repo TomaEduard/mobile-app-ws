@@ -86,6 +86,11 @@ class UserControllerTest {
         assertEquals(userDto.getAddresses().size(), userRest.getAddresses().size());
     }
 
+/*
+    TODO: need add test coverage for validation fields of userDetailsRequestModel
+    - @NotNull, @Size(min, max), @Pattern(lowercase, uppercase, numbers)
+    - throw correct numbers of fields errors
 
-
+    Example of this of hoaxify project
+*/
 }
