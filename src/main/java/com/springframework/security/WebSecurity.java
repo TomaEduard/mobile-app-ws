@@ -31,6 +31,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable().authorizeRequests()
 
+                // public api for login
+//                .antMatchers(HttpMethod.POST, SecurityConstants.LOGIN).permitAll()
+
                 // public api for register
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
 
@@ -47,7 +50,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers(SecurityConstants.H2_CONSOLE).permitAll()
 
                 // public api for swagger
-                .antMatchers("/v2/api-docs", "/configuration/**", "swagger-ui.html#/**" , "/swagger*/**", "/webjars/**").permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/**", "swagger-ui.html#/**", "/swagger*/**", "/webjars/**").permitAll()
 
                 // protect api
                 // .anyRequest().authenticated().and().addFilter(new AuthenticationFilter(authenticationManager()));

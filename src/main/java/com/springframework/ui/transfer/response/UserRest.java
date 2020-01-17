@@ -10,9 +10,11 @@ import java.util.List;
 public class UserRest {
 
     private String userId;
+    private String displayName;
     private String firstName;
     private String lastName;
     private String email;
+    private String image;
     private List<AddressesRest> addresses;
 
 }

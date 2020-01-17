@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -62,9 +64,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println("#3 - AuthenticationFilter - successfulAuthentication");
         String userName = ((User) authResult.getPrincipal()).getUsername();
 
+        // prepare data for token
+        final Map<String, Object> tokenData = new HashMap<>();
+        tokenData.put("test", "123");
+        tokenData.put("test2", "456");
+        tokenData.put("test3", "789");
+
         // create JWT with jjwt dependency
         String token = Jwts.builder()
                 .setSubject(userName)
+//                .setClaims(tokenData)
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SecurityConstants.getTokenSecret())
                 .compact();

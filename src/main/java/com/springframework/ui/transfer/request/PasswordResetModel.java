@@ -8,7 +8,6 @@ import lombok.Setter;
 public class PasswordResetModel {
 
     private String token;
-
     private String password;
 
 }

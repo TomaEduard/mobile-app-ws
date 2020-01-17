@@ -1,5 +1,6 @@
 package com.springframework.io.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,9 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
-@Setter
-@Getter
-@ToString
+@Data
 @Entity(name = "users")
 public class UserEntity implements Serializable {
 
@@ -25,6 +24,9 @@ public class UserEntity implements Serializable {
     // alphanumeric - sending back to movie application with response.verify
     @Column(nullable = false)                   // cannot be null
     private String  userId;
+
+    @Column(nullable = false)                   // cannot be null
+    private String displayName;
 
     @Column(nullable = false, length = 50)      // cannot be null & limit length
     private String firstName;
@@ -43,6 +45,8 @@ public class UserEntity implements Serializable {
     // set default value to false
     @Column(nullable = false)                   // cannot be null & limit length
     private Boolean emailVerificationStatus =  false;
+
+    private String image;
 
     @OneToMany(mappedBy = "userDetails", cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
